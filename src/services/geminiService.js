@@ -28,7 +28,7 @@ const geminiService = {
       console.log('Starting Gemini API request...');
 
       // Construct the full API URL with project ID
-      const apiUrl = `${GEMINI_API_URL}/projects/visionverse-app/models/${GEMINI_MODEL}:generateContent`;
+      const apiUrl = `${GEMINI_API_URL}/projects/visionverse-app/locations/global/models/${GEMINI_MODEL}:generateContent`;
       console.log('Making API request to:', apiUrl);
 
       try {
@@ -47,8 +47,7 @@ const geminiService = {
           'X-Goog-Api-Key-Source': 'visionverse-web',
           'X-Goog-Api-Key-Region': 'global',
           'X-Goog-Api-Key-Type': 'service_account',
-          'X-Goog-Api-Key-Usage': 'image-generation',
-          'X-Goog-Api-Key-Project': 'visionverse-app'
+          'X-Goog-Api-Key-Usage': 'image-generation'
         };
         console.log('Request headers:', Object.keys(headers));
         
@@ -56,8 +55,6 @@ const geminiService = {
           method: 'POST',
           headers: headers,
           body: JSON.stringify({
-            project: 'projects/visionverse-app',
-            model: 'gemini-pro-vision',
             contents: [
               {
                 inlineData: {
