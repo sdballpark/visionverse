@@ -12,7 +12,8 @@ const geminiService = {
           'Authorization': `Bearer ${GEMINI_API_KEY}`,
           'X-Goog-Api-Key': GEMINI_API_KEY,
           'Accept': 'application/json',
-          'User-Agent': 'Visionverse/1.0'
+          'User-Agent': 'Visionverse/1.0',
+          'X-Goog-Api-Key-Version': '1.0'
         },
         body: JSON.stringify({
           contents: [
@@ -27,7 +28,8 @@ const geminiService = {
             temperature: 0.7,
             topP: 0.8,
             topK: 40,
-            maxOutputTokens: 2048
+            maxOutputTokens: 2048,
+            candidateCount: 1
           }
         })
       });
