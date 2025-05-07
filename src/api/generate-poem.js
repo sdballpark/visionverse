@@ -49,7 +49,7 @@ export async function POST(request) {
     // Generate content using Gemini
     try {
       const response = await axios.post(
-        `${GEMINI_API_URL}:generateContent`,
+        `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`,
         {
           contents: [
             {
@@ -67,7 +67,8 @@ export async function POST(request) {
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${GEMINI_API_KEY}`
+            'Authorization': `Bearer ${GEMINI_API_KEY}`,
+            'X-Goog-Api-Key': GEMINI_API_KEY
           }
         }
       );
