@@ -1,15 +1,16 @@
-import { GEMINI_API_KEY, GEMINI_API_URL, GEMINI_MODEL } from '../config/openai';
+import { GEMINI_API_KEY, GEMINI_API_URL, GEMINI_MODEL } from '../config/gemini';
 
 const geminiService = {
   async generateContent(imageData) {
     try {
       console.log('Gemini API Key:', GEMINI_API_KEY.substring(0, 4) + '...' + GEMINI_API_KEY.substring(GEMINI_API_KEY.length - 4));
       
-      const response = await fetch(`${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`, {
+      const response = await fetch(`${GEMINI_API_URL}/models/gemini-pro-vision:generateContent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${GEMINI_API_KEY}`
+          'Authorization': `Bearer ${GEMINI_API_KEY}`,
+          'X-Goog-Api-Key': GEMINI_API_KEY
         },
         body: JSON.stringify({
           contents: [
@@ -29,8 +30,12 @@ const geminiService = {
 
       if (!response.ok) {
         const error = await response.json();
-        console.error('Gemini API Error:', error);
-        throw new Error(`Gemini API Error: ${error.message}`);
+        console.error('Gemini API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: error
+        });
+        throw new Error(`Gemini API Error (${response.status}): ${error.message || response.statusText}`);
       }
 
       const data = await response.json();
