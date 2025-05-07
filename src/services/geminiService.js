@@ -4,14 +4,13 @@ const geminiService = {
   async generateContent(imageData) {
     try {
       console.log('Starting Gemini API request...');
-      console.log('API Configuration:', {
-        url: `${GEMINI_API_URL}/models/gemini-pro-vision:generateContent`,
-        apiKeyLength: GEMINI_API_KEY.length,
-        startsWithAIza: GEMINI_API_KEY.startsWith('AIza')
-      });
+
+      // Construct the full API URL
+      const apiUrl = `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`;
+      console.log('Making API request to:', apiUrl);
 
       try {
-        const response = await fetch(`${GEMINI_API_URL}/models/gemini-pro-vision:generateContent`, {
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -19,7 +18,8 @@ const geminiService = {
             'X-Goog-Api-Key': GEMINI_API_KEY,
             'Accept': 'application/json',
             'User-Agent': 'Visionverse/1.0',
-            'X-Goog-Api-Key-Version': '1.0'
+            'X-Goog-Api-Key-Version': '1.0',
+            'X-Goog-Request-Params': `key=${GEMINI_API_KEY}`
           },
           body: JSON.stringify({
             contents: [
@@ -35,7 +35,13 @@ const geminiService = {
               topP: 0.8,
               topK: 40,
               maxOutputTokens: 2048,
-              candidateCount: 1
+              candidateCount: 1,
+              safetySettings: [
+                {
+                  category: 'HARM_CATEGORY_HARASSMENT',
+                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
+                }
+              ]
             }
           })
         });
