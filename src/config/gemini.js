@@ -3,19 +3,16 @@ const validateGeminiApiKey = (apiKey) => {
     throw new Error('Gemini API key is required');
   }
   if (!apiKey.startsWith('AIza')) {
-    throw new Error('Invalid Gemini API key format. API keys should start with "AIza"');
+    throw new Error('Invalid Gemini API key format. API keys must start with "AIza"');
   }
-  if (apiKey.length < 39) {  // Gemini API keys are typically 39 characters long
-    throw new Error('Invalid Gemini API key length. Expected at least 39 characters');
-  }
-  if (!apiKey.includes('AIza')) {
-    throw new Error('Invalid Gemini API key format. Must contain "AIza"');
+  if (apiKey.length < 39) {
+    throw new Error('Invalid Gemini API key length. Gemini API keys must be at least 39 characters');
   }
 };
 
 export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 validateGeminiApiKey(GEMINI_API_KEY);
-export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1';
+export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1'; // Gemini API v1 endpoint
 export const GEMINI_MODEL = 'gemini-pro-vision';
 
 // Add API version validation
