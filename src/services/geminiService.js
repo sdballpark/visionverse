@@ -107,7 +107,9 @@ const geminiService = {
                   category: 'HARM_CATEGORY_UNETHICAL',
                   threshold: 'BLOCK_MEDIUM_AND_ABOVE'
                 }
-              ]
+              ],
+              model: 'gemini-pro-vision'
+            }
             }
           })
         });
@@ -121,7 +123,35 @@ const geminiService = {
               error: error,
               headers: Object.fromEntries(response.headers.entries()),
               requestUrl: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`,
-              responseTime: Date.now() - startTime
+              responseTime: Date.now() - startTime,
+              requestHeaders: headers,
+              requestBody: {
+                model: 'gemini-pro-vision',
+                contents: [{
+                  inlineData: {
+                    mimeType: 'image/jpeg',
+                    data: 'REDACTED_IMAGE_DATA'
+                  }
+                }],
+                generationConfig: {
+                  temperature: 0.7,
+                  topP: 0.8,
+                  topK: 40,
+                  maxOutputTokens: 2048,
+                  candidateCount: 1,
+                  safetySettings: [
+                    { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                    { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                    { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                    { category: 'HARM_CATEGORY_DANGEROUS', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                    { category: 'HARM_CATEGORY_HARSH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                    { category: 'HARM_CATEGORY_SELF_HARM', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                    { category: 'HARM_CATEGORY_VIOLENCE', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                    { category: 'HARM_CATEGORY_UNSAFE', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                    { category: 'HARM_CATEGORY_UNETHICAL', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
+                  ]
+                }
+              }
             });
           } catch (parseError) {
             console.error('Failed to parse error response:', {
