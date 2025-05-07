@@ -4,14 +4,14 @@ const validateGeminiApiKey = (apiKey) => {
   
   // Basic validation
   if (!apiKey) {
-    console.error('No API key provided');
-    throw new Error('Gemini API key is required. Please set VITE_GEMINI_API_KEY in your environment variables.');
+    console.error('No Gemini API key provided');
+    throw new Error('Gemini API key is missing. Please check your VITE_GEMINI_API_KEY in Vercel settings.');
   }
 
   const trimmedKey = apiKey.trim();
   if (trimmedKey === '') {
-    console.error('API key is empty after trimming whitespace');
-    throw new Error('Gemini API key cannot be empty. Please check your environment variables.');
+    console.error('Gemini API key is empty after trimming whitespace');
+    throw new Error('Gemini API key cannot be empty. Please check your VITE_GEMINI_API_KEY in Vercel settings.');
   }
 
   // Gemini API key format validation
@@ -24,20 +24,20 @@ const validateGeminiApiKey = (apiKey) => {
       console.error('Invalid Gemini API key format');
       throw new Error('Invalid Gemini API key format.\n' +
         'Expected format: AIza followed by 35+ alphanumeric characters\n' +
-        'Please verify your key in Google Cloud Console');
+        'Please verify your key in Vercel settings.');
     }
 
     // Check key length
     if (trimmedKey.length < 39) {
       console.error('Gemini API key too short');
-      throw new Error('Gemini API key is too short. It should be at least 39 characters long.');
+      throw new Error('Gemini API key is too short. It should be at least 39 characters long. Please check your VITE_GEMINI_API_KEY in Vercel settings.');
     }
 
     // Check for any invalid characters
     const invalidChars = trimmedKey.match(/[^A-Za-z0-9_-]/g);
     if (invalidChars) {
       console.error('Invalid characters found in API key:', invalidChars);
-      throw new Error('Gemini API key contains invalid characters. Only letters, numbers, underscores, and hyphens are allowed.');
+      throw new Error('Gemini API key contains invalid characters. Only letters, numbers, underscores, and hyphens are allowed. Please check your VITE_GEMINI_API_KEY in Vercel settings.');
     }
 
     // Log successful validation
