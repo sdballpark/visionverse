@@ -85,9 +85,11 @@ function App() {
       } else if (err.response?.status === 403) {
         errorMessage = 'Insufficient permissions. Please check your Gemini API key permissions.';
       } else if (err.response?.status === 429) {
-        errorMessage = 'Rate limit exceeded. Please wait a moment and try again.';
+        errorMessage = 'Gemini API rate limit exceeded. Please wait a moment and try again.';
       } else if (err.message) {
         errorMessage = `Gemini API Error: ${err.message}`;
+      } else {
+        setError('Failed to generate poem using Gemini API. Please try again.');
       }
       
       setError(errorMessage);
