@@ -33,7 +33,8 @@ const geminiService = {
 
       try {
         console.log('Sending request to:', apiUrl);
-        console.log('Request headers:', Object.keys({
+        
+        const headers = {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${GEMINI_API_KEY}`,
           'Accept': 'application/json',
@@ -47,25 +48,12 @@ const geminiService = {
           'X-Goog-Api-Key-Region': 'global',
           'X-Goog-Api-Key-Type': 'service_account',
           'X-Goog-Api-Key-Usage': 'image-generation'
-        }));
+        };
+        console.log('Request headers:', Object.keys(headers));
         
         const response = await fetch(apiUrl, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${GEMINI_API_KEY}`,
-            'Accept': 'application/json',
-            'User-Agent': 'Visionverse/1.0',
-            'X-Goog-Api-Key-Version': '1.0',
-            'X-Goog-Api-Key-Location': 'header',
-            'X-Request-ID': Math.random().toString(36).substring(2, 15),
-            'X-Goog-User-Project': 'visionverse-app',
-            'X-Goog-Api-Key-Format': 'v2',
-            'X-Goog-Api-Key-Source': 'visionverse-web',
-            'X-Goog-Api-Key-Region': 'global',
-            'X-Goog-Api-Key-Type': 'service_account',
-            'X-Goog-Api-Key-Usage': 'image-generation'
-          },
+          headers: headers,
           body: JSON.stringify({
             model: 'gemini-pro-vision',
             contents: [
@@ -110,8 +98,16 @@ const geminiService = {
                 {
                   category: 'HARM_CATEGORY_VIOLENCE',
                   threshold: 'BLOCK_MEDIUM_AND_ABOVE'
+                },
+                {
+                  category: 'HARM_CATEGORY_UNSAFE',
+                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
+                },
+                {
+                  category: 'HARM_CATEGORY_UNETHICAL',
+                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
                 }
-              ],
+              ]
             }
           })
         });
