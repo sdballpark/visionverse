@@ -5,7 +5,7 @@ const geminiService = {
     try {
       console.log('Gemini API Key:', GEMINI_API_KEY.substring(0, 4) + '...' + GEMINI_API_KEY.substring(GEMINI_API_KEY.length - 4));
       
-      const response = await fetch(`${GEMINI_API_URL}/models/gemini-pro-vision:generateContent`, {
+      const response = await fetch(`${GEMINI_API_URL}/models/gemini-pro-vision/generateContent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
