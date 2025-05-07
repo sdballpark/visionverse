@@ -49,6 +49,7 @@ const PoemContainer = styled.div`
 function App() {
   const [theme, setTheme] = useState('light');
   const [imageFile, setImageFile] = useState(null);
+  const [imageURL, setImageURL] = useState('');
   const [poem, setPoem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -63,6 +64,7 @@ function App() {
     try {
       console.log('Setting image file:', file.name);
       setImageFile(file);
+      setImageURL(URL.createObjectURL(file));
       setPoem(null);
       setError(null);
       setLoading(true);
@@ -103,7 +105,7 @@ function App() {
     setLoading(false);
     // Clean up any existing image URLs
     if (imageFile) {
-      URL.revokeObjectURL(imageFile);
+      URL.revokeObjectURL(imageURL);
     }
   };
 

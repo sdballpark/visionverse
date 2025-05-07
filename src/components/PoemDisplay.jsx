@@ -100,7 +100,7 @@ export function PoemDisplay({ imageFile, poem, theme, onReset, onDownload, metad
           {imageFile && (
             <div className="relative w-full h-auto">
               <img
-                src={URL.createObjectURL(imageFile)}
+                src={imageFile}
                 alt="Poem inspiration image"
                 className="w-full h-auto max-h-[400px] object-contain"
                 onError={(e) => {
