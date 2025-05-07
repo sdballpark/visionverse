@@ -1,0 +1,11 @@
+[build]
+  base = "/"
+  publish = "dist"
+  command = "npm run build"
+
+[build.environment]
+  VITE_GEMINI_API_KEY = "${VITE_GEMINI_API_KEY}"
+
+[dev]
+  command = "npm run dev"
+  port = 5173

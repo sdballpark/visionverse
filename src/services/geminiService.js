@@ -4,11 +4,26 @@ const validateRequest = (imageData, apiKey) => {
   if (!imageData) {
     throw new Error('No image data provided');
   }
-  if (!apiKey || !apiKey.startsWith('AIza')) {
-    throw new Error('Invalid Gemini API key');
+  
+  // Strict Gemini API key validation
+  if (!apiKey) {
+    throw new Error('Gemini API key is missing. Please check your VITE_GEMINI_API_KEY in Vercel settings.');
   }
+  
+  // Check Gemini key format
+  if (!apiKey.startsWith('AIza')) {
+    throw new Error('Invalid Gemini API key format. Please verify your key starts with "AIza" in Vercel settings.');
+  }
+  
+  // Check key length
   if (apiKey.length < 39) {
-    throw new Error('Gemini API key too short');
+    throw new Error('Gemini API key too short. Please verify your key is at least 39 characters long in Vercel settings.');
+  }
+  
+  // Check for invalid characters
+  const invalidChars = apiKey.match(/[^A-Za-z0-9_-]/g);
+  if (invalidChars) {
+    throw new Error(`Invalid characters in Gemini API key. Only letters, numbers, underscores, and hyphens are allowed. Found: ${invalidChars.join(', ')}`);
   }
 };
 
@@ -79,12 +94,22 @@ const geminiService = {
       
       if (!response.ok) {
         const error = await response.json();
-        console.error('API Error Response:', {
+        console.error('Gemini API Error Response:', {
           status: response.status,
           statusText: response.statusText,
           error: error
         });
-        throw new Error(`Gemini API error: ${error.message || 'Unknown error'}`);
+        
+        let errorMessage = 'Failed to generate poem using Gemini API.';
+        if (error.message) {
+          errorMessage = `Gemini API Error: ${error.message}`;
+          if (error.message.includes('invalid_api_key')) {
+            errorMessage += ' Please verify your Gemini API key in Vercel settings.';
+          } else if (error.message.includes('rate_limit')) {
+            errorMessage = 'Gemini API rate limit exceeded. Please wait a moment and try again.';
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();

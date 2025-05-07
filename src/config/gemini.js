@@ -47,8 +47,15 @@ const validateGeminiApiKey = (apiKey) => {
 };
 
 export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+
+// Validate API key immediately
+if (!GEMINI_API_KEY) {
+  console.error('Gemini API key is missing. Please set VITE_GEMINI_API_KEY in your environment variables.');
+  throw new Error('Gemini API key is required');
+}
+
 validateGeminiApiKey(GEMINI_API_KEY);
-export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1'; // Gemini API v1 endpoint
+export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/projects/visionverse-app/locations/global/models/gemini-pro-vision';
 export const GEMINI_MODEL = 'gemini-pro-vision';
 
 // Add API version validation
@@ -56,11 +63,11 @@ const validateApiUrl = (url) => {
   if (!url) {
     throw new Error('Gemini API URL is required. Please check your configuration.');
   }
-  if (!url.includes('v1')) {
-    throw new Error('Invalid API URL version. Expected v1. Please verify your configuration.');
-  }
   if (!url.includes('generativelanguage.googleapis.com')) {
-    throw new Error('Invalid API domain. Must use generativelanguage.googleapis.com. Please verify your configuration.');
+    throw new Error('Invalid API URL format. Please use the correct Gemini API endpoint.');
+  }
+  if (!url.includes('gemini-pro-vision')) {
+    throw new Error('Invalid model specification. Expected gemini-pro-vision model.');
   }
   if (!url.startsWith('https://')) {
     throw new Error('API URL must use HTTPS. Please verify your configuration.');

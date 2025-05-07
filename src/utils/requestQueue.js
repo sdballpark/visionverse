@@ -1,3 +1,5 @@
+import { GEMINI_API_KEY, GEMINI_API_URL } from '../config/gemini';
+
 class RequestQueue {
   constructor(maxConcurrent = 1, timeout = 30000) {
     this.maxConcurrent = maxConcurrent;
@@ -6,6 +8,16 @@ class RequestQueue {
     this.timeout = timeout;
     this.requestId = 0;
     this.progressCallbacks = new Map();
+    
+    // Validate API configuration
+    if (!GEMINI_API_KEY) {
+      console.error('Gemini API key is missing. Please set VITE_GEMINI_API_KEY in your environment variables.');
+      throw new Error('Gemini API key is required');
+    }
+    if (!GEMINI_API_URL) {
+      console.error('Gemini API URL is missing. Please check your configuration.');
+      throw new Error('Gemini API URL is required');
+    }
   }
 
   async add(request, options = {}) {

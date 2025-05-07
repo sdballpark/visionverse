@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { GEMINI_API_KEY, GEMINI_API_URL, GEMINI_MODEL } from '../config/gemini';
 
+// Ensure environment variables are properly loaded
+if (!process.env.VITE_GEMINI_API_KEY) {
+  throw new Error('VITE_GEMINI_API_KEY is not set in environment variables');
+}
+
 export async function POST(request) {
   try {
     console.log('Starting image processing...');
@@ -52,35 +57,11 @@ export async function POST(request) {
 
     console.log('Image processed successfully. Starting Gemini API call...');
 
+    const startTime = Date.now();
+    
     // Generate content using Gemini
     const response = await axios.post(
-      `${GEMINI_API_URL}/projects/visionverse-app/locations/global/models/gemini-pro-vision:generateContent`,
-        {
-          contents: [
-            {
-              inlineData: {
-                mimeType: file.type,
-                data: base64Image
-              }
-            }
-          ],
-          generationConfig: {
-            temperature: 0.7,
-            topP: 0.8,
-            topK: 40,
-            maxOutputTokens: 2048,
-            candidateCount: 1,
-            safetySettings: [
-              { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-              { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-              { category: 'HARM_CATEGORY_DANGEROUS', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-              { category: 'HARM_CATEGORY_HARSH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-              { category: 'HARM_CATEGORY_SELF_HARM', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-              { category: 'HARM_CATEGORY_VIOLENCE', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
-            ]
-          }
-        },
+      `${GEMINI_API_URL}:generateContent`,
       {
         contents: [
           {
@@ -111,7 +92,10 @@ export async function POST(request) {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${GEMINI_API_KEY}`,
-          'X-Goog-Api-Key': GEMINI_API_KEY
+          'X-Goog-Api-Key': GEMINI_API_KEY,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
         }
       }
     );
@@ -138,6 +122,12 @@ export async function POST(request) {
           timestamp: new Date().toISOString(),
           imageType: file.type
         }
+      }, {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
       });
 
   } catch (error) {
@@ -156,7 +146,13 @@ export async function POST(request) {
     
     return NextResponse.json(
       { error: errorMessage },
-      { status: error.response?.status || 500 }
+      { status: error.response?.status || 500, headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      } }
     );
+  }
+}
   }
 }
