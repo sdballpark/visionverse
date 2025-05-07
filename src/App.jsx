@@ -73,6 +73,13 @@ function App() {
       const fileBuffer = await file.arrayBuffer();
       const base64Image = btoa(String.fromCharCode(...new Uint8Array(fileBuffer)));
       
+      // Log image data details
+      console.log('Image data details:', {
+        size: file.size,
+        type: file.type,
+        base64Length: base64Image.length
+      });
+      
       try {
         const result = await geminiService.generateContent(base64Image);
         setPoem(result);
@@ -94,6 +101,9 @@ function App() {
       }
     } finally {
       setLoading(false);
+      if (imageURL) {
+        URL.revokeObjectURL(imageURL);
+      }
     }
   };
 
@@ -103,10 +113,6 @@ function App() {
     setPoem(null);
     setError(null);
     setLoading(false);
-    // Clean up any existing image URLs
-    if (imageFile) {
-      URL.revokeObjectURL(imageURL);
-    }
   };
 
   // Effect hooks
@@ -118,8 +124,8 @@ function App() {
 
   useEffect(() => {
     return () => {
-      if (imageFile) {
-        URL.revokeObjectURL(imageFile);
+      if (imageURL) {
+        URL.revokeObjectURL(imageURL);
       }
     };
   }, [imageFile]);
@@ -146,8 +152,8 @@ function App() {
   // Clean up image URL when component unmounts
   useEffect(() => {
     return () => {
-      if (imageFile) {
-        URL.revokeObjectURL(imageFile);
+      if (imageURL) {
+        URL.revokeObjectURL(imageURL);
       }
     };
   }, [imageFile]);

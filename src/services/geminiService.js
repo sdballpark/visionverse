@@ -58,18 +58,45 @@ const geminiService = {
       });
 
       const startTime = Date.now();
+      // Format the image data for Gemini API
+      const formattedImageData = {
+        contents: [
+          {
+            inlineData: {
+              mimeType: 'image/jpeg',
+              data: imageData
+            }
+          }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          topP: 0.8,
+          topK: 40,
+          maxOutputTokens: 2048,
+          candidateCount: 1,
+          safetySettings: [
+            { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+            { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+            { category: 'HARM_CATEGORY_DANGEROUS', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+            { category: 'HARM_CATEGORY_HARSH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+            { category: 'HARM_CATEGORY_SELF_HARM', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+            { category: 'HARM_CATEGORY_VIOLENCE', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
+          ]
+        }
+      };
+
+      console.log('Formatted request body:', {
+        contents: formattedImageData.contents.length,
+        mimeType: formattedImageData.contents[0].inlineData.mimeType,
+        dataLength: formattedImageData.contents[0].inlineData.data.length
+      });
+
       const response = await fetch(`${GEMINI_API_URL}/projects/visionverse-app/locations/global/models/${GEMINI_MODEL}:generateContent`, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify({
-          contents: [
-            {
-              inlineData: {
-                mimeType: 'image/jpeg',
-                data: imageData
-              }
-            }
-          ],
+        body: JSON.stringify(formattedImageData)
+      });
           generationConfig: {
             temperature: 0.7,
             topP: 0.8,
