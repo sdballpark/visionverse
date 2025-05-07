@@ -1,8 +1,30 @@
 import { GEMINI_API_KEY, GEMINI_API_URL, GEMINI_MODEL } from '../config/gemini';
 
+const validateRequest = (imageData, apiKey) => {
+  if (!imageData) {
+    throw new Error('No image data provided');
+  }
+  if (!apiKey || !apiKey.startsWith('AIza')) {
+    throw new Error('Invalid Gemini API key');
+  }
+  if (apiKey.length < 39) {
+    throw new Error('Gemini API key too short');
+  }
+};
+
 const geminiService = {
   async generateContent(imageData) {
     try {
+      // Validate inputs
+      validateRequest(imageData, GEMINI_API_KEY);
+      
+      console.log('Starting Gemini API request...');
+      console.log('API Configuration:', {
+        url: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`,
+        apiKeyLength: GEMINI_API_KEY.length,
+        startsWithAIza: GEMINI_API_KEY.startsWith('AIza'),
+        model: GEMINI_MODEL
+      });
       console.log('Starting Gemini API request...');
 
       // Construct the full API URL
@@ -19,7 +41,8 @@ const geminiService = {
             'Accept': 'application/json',
             'User-Agent': 'Visionverse/1.0',
             'X-Goog-Api-Key-Version': '1.0',
-            'X-Goog-Request-Params': `key=${GEMINI_API_KEY}`
+            'X-Goog-Request-Params': `key=${GEMINI_API_KEY}`,
+            'X-Goog-Api-Key-Location': 'header'
           },
           body: JSON.stringify({
             contents: [
@@ -52,7 +75,8 @@ const geminiService = {
             status: response.status,
             statusText: response.statusText,
             error: error,
-            headers: Object.fromEntries(response.headers.entries())
+            headers: Object.fromEntries(response.headers.entries()),
+            requestUrl: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`
           });
 
           const errorMessage = `Gemini API Error (${response.status}): ${error.message || response.statusText}`;
@@ -81,7 +105,8 @@ const geminiService = {
       console.log('Gemini API Response:', {
         status: response.status,
         candidates: data.candidates?.length,
-        response: data
+        response: data,
+        requestUrl: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`
       });
 
       if (!data.candidates || data.candidates.length === 0) {
