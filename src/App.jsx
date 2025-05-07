@@ -4,7 +4,7 @@ import { PoemDisplay } from './components/PoemDisplay';
 import { Header } from './components/Header';
 import LoadingSpinner from './components/LoadingSpinner';
 import styled from 'styled-components';
-import { generatePoem } from './services/poemService.jsx';
+import geminiService from './services/geminiService';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -67,12 +67,30 @@ function App() {
       setError(null);
       setLoading(true);
 
-      // Generate the poem immediately with the file
-      const result = await generatePoem(file);
-      setPoem(result.poem);
+      // Generate the poem using Gemini API
+      const fileBuffer = await file.arrayBuffer();
+      const base64Image = Buffer.from(fileBuffer).toString('base64');
+      const result = await geminiService.generateContent(base64Image);
+      setPoem(result);
     } catch (err) {
-      console.error('Error:', err);
-      setError(err.message || 'Failed to generate poem');
+      console.error('Error in poem generation:', {
+        message: err.message,
+        stack: err.stack,
+        response: err.response?.data
+      });
+      
+      let errorMessage = 'Failed to generate poem';
+      if (err.response?.status === 401) {
+        errorMessage = 'Invalid Gemini API key. Please check your environment variables.';
+      } else if (err.response?.status === 403) {
+        errorMessage = 'Insufficient permissions. Please check your Gemini API key permissions.';
+      } else if (err.response?.status === 429) {
+        errorMessage = 'Rate limit exceeded. Please wait a moment and try again.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
