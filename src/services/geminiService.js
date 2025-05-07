@@ -5,12 +5,13 @@ const geminiService = {
     try {
       console.log('Gemini API Key:', GEMINI_API_KEY.substring(0, 4) + '...' + GEMINI_API_KEY.substring(GEMINI_API_KEY.length - 4));
       
-      const response = await fetch(`${GEMINI_API_URL}/models/gemini-pro-vision/generateContent`, {
+      const response = await fetch(`${GEMINI_API_URL}/models/gemini-pro-vision:generateContent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${GEMINI_API_KEY}`,
-          'X-Goog-Api-Key': GEMINI_API_KEY
+          'X-Goog-Api-Key': GEMINI_API_KEY,
+          'Accept': 'application/json'
         },
         body: JSON.stringify({
           contents: [
@@ -21,9 +22,10 @@ const geminiService = {
               }
             }
           ],
-          tools: ['image'],
           generationConfig: {
-            temperature: 0.7
+            temperature: 0.7,
+            topP: 0.8,
+            topK: 40
           }
         })
       });
