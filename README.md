@@ -1,6 +1,8 @@
 # VisionVerse - AI-Powered Image-to-Poem Generator
 
-A modern web application that generates beautiful poems based on uploaded images using AI.
+## API Integration
+
+The application uses the Gemini API to generate poems based on images. The API key is loaded from the .env file and used to authenticate requests to the Gemini API.
 
 ## Features
 
@@ -14,14 +16,15 @@ A modern web application that generates beautiful poems based on uploaded images
 
 ## Setup
 
-1. First, get an OpenAI API key:
-   - Go to [OpenAI Platform](https://platform.openai.com/api-keys)
-   - Click "Create new secret key"
-   - Copy the API key
+1. First, get a Gemini API key:
+   - Go to [Google Cloud Console](https://console.cloud.google.com)
+   - Enable the Generative AI API
+   - Create a new API key
+   - Copy the API key (it starts with "AIza")
 
-2. Create a `.env` file in the project root:
+2. Create a `.env` file in the root directory:
    ```bash
-   echo "VITE_OPENAI_API_KEY=your_openai_api_key_here" > .env
+   echo "VITE_GEMINI_API_KEY=your_gemini_api_key_here" > .env
    ```
 
 3. Clone the repository
@@ -29,11 +32,7 @@ A modern web application that generates beautiful poems based on uploaded images
    ```bash
    npm install
    ```
-5. Create a `.env` file with your API keys:
-   ```
-   VITE_GEMINI_API_KEY=your_gemini_api_key
-   ```
-6. Start the development server:
+5. Run the development server:
    ```bash
    npm run dev
    ```

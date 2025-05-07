@@ -3,10 +3,13 @@ const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs').promises;
 const path = require('path');
+const config = require('../config/config');
 
 const app = express();
-const port = 3001;
-const uploadDir = path.join(__dirname, 'uploads');
+
+// For Vercel, we don't need to specify a port
+// Vercel will handle the port automatically
+const uploadDir = path.join(__dirname, config.upload.storagePath);
 const buildDir = path.join(__dirname, 'dist');
 
 // Serve static files from build directory
@@ -32,12 +35,19 @@ const upload = multer({
     }
   }),
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB limit
+    fileSize: parseInt(config.upload.maxFileSize)
+  },
+  fileFilter: (req, file, cb) => {
+    if (config.upload.allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('File type not allowed'));
+    }
   }
 });
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: '*',
   credentials: true
 }));
 app.use(express.json());
@@ -68,6 +78,11 @@ Capturing moments in a single space.`;
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+const healthCheck = require('./src/utils/healthCheck');
+
+// Add health check endpoints
+healthCheck(app);
+
+// In Vercel, we don't need to listen manually
+// Vercel will handle the server startup
+module.exports = app;

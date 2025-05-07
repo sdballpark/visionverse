@@ -1,15 +1,48 @@
 const validateGeminiApiKey = (apiKey) => {
-  if (!apiKey || apiKey.trim() === '') {
-    throw new Error('Gemini API key is required. Please set VITE_GEMINI_API_KEY in your Vercel environment variables.');
+  // Log the validation process
+  console.log('Validating Gemini API key...');
+  
+  // Basic validation
+  if (!apiKey) {
+    console.error('No API key provided');
+    throw new Error('Gemini API key is required. Please set VITE_GEMINI_API_KEY in your environment variables.');
   }
-  if (!apiKey.startsWith('AIza')) {
-    throw new Error('Invalid Gemini API key format. API keys must start with "AIza". Please verify your key in Google Cloud Console.');
+
+  const trimmedKey = apiKey.trim();
+  if (trimmedKey === '') {
+    console.error('API key is empty after trimming whitespace');
+    throw new Error('Gemini API key cannot be empty. Please check your environment variables.');
   }
-  if (apiKey.length < 39) {
-    throw new Error('Invalid Gemini API key length. Gemini API keys must be at least 39 characters. Please verify your key in Google Cloud Console.');
-  }
-  if (apiKey.includes('AIzaSY')) {
-    throw new Error('Invalid Gemini API key format. The key appears to be a legacy format. Please generate a new key in Google Cloud Console.');
+
+  // Gemini API key format validation
+  const apiKeyFormat = /^AIza[A-Za-z0-9_-]{35,}$/;
+  if (!apiKeyFormat.test(trimmedKey)) {
+    console.log('API key format validation failed');
+    
+    // Validate Gemini API key format
+    if (!trimmedKey.startsWith('AIza')) {
+      console.error('Invalid Gemini API key format');
+      throw new Error('Invalid Gemini API key format.\n' +
+        'Expected format: AIza followed by 35+ alphanumeric characters\n' +
+        'Please verify your key in Google Cloud Console');
+    }
+
+    // Check key length
+    if (trimmedKey.length < 39) {
+      console.error('Gemini API key too short');
+      throw new Error('Gemini API key is too short. It should be at least 39 characters long.');
+    }
+
+    // Check for any invalid characters
+    const invalidChars = trimmedKey.match(/[^A-Za-z0-9_-]/g);
+    if (invalidChars) {
+      console.error('Invalid characters found in API key:', invalidChars);
+      throw new Error('Gemini API key contains invalid characters. Only letters, numbers, underscores, and hyphens are allowed.');
+    }
+
+    // Log successful validation
+    console.log('API key validation successful');
+    console.log('Key length:', trimmedKey.length);
   }
 };
 
