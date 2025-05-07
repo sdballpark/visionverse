@@ -55,7 +55,7 @@ if (!GEMINI_API_KEY) {
 }
 
 validateGeminiApiKey(GEMINI_API_KEY);
-export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/projects/visionverse-app/locations/global/models/gemini-pro-vision';
+export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1';
 export const GEMINI_MODEL = 'gemini-pro-vision';
 
 // Add API version validation

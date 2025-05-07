@@ -33,15 +33,6 @@ const geminiService = {
       // Validate inputs
       validateRequest(imageData, GEMINI_API_KEY);
       
-      console.log('Starting Gemini API request...');
-      console.log('API Configuration:', {
-        apiUrl: `${GEMINI_API_URL}/projects/visionverse-app/locations/global/models/${GEMINI_MODEL}:generateContent`,
-        apiKeyLength: GEMINI_API_KEY.length,
-        startsWithAIza: GEMINI_API_KEY.startsWith('AIza'),
-        model: GEMINI_MODEL,
-        headers: Object.keys(headers)
-      });
-
       const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${GEMINI_API_KEY}`,
@@ -56,6 +47,15 @@ const geminiService = {
         'X-Goog-Api-Key-Type': 'service_account',
         'X-Goog-Api-Key-Usage': 'image-generation'
       };
+
+      console.log('Starting Gemini API request...');
+      console.log('API Configuration:', {
+        apiUrl: `${GEMINI_API_URL}/projects/visionverse-app/locations/global/models/${GEMINI_MODEL}:generateContent`,
+        apiKeyLength: GEMINI_API_KEY.length,
+        startsWithAIza: GEMINI_API_KEY.startsWith('AIza'),
+        model: GEMINI_MODEL,
+        headers: Object.keys(headers)
+      });
 
       const startTime = Date.now();
       const response = await fetch(`${GEMINI_API_URL}/projects/visionverse-app/locations/global/models/${GEMINI_MODEL}:generateContent`, {
