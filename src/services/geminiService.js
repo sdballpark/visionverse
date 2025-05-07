@@ -48,9 +48,12 @@ const geminiService = {
             'X-Request-ID': Math.random().toString(36).substring(2, 15),
             'X-Goog-User-Project': 'visionverse-app',
             'X-Goog-Api-Key-Format': 'v2',
-            'X-Goog-Api-Key-Source': 'visionverse-web'
+            'X-Goog-Api-Key-Source': 'visionverse-web',
+            'X-Goog-Api-Key-Region': 'global',
+            'X-Goog-Api-Key-Type': 'service_account'
           },
           body: JSON.stringify({
+            model: 'gemini-pro-vision',
             contents: [
               {
                 inlineData: {
@@ -77,11 +80,17 @@ const geminiService = {
                 {
                   category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
                   threshold: 'BLOCK_MEDIUM_AND_ABOVE'
+                },
+                {
+                  category: 'HARM_CATEGORY_DANGEROUS',
+                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
+                },
+                {
+                  category: 'HARM_CATEGORY_HARSH',
+                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
                 }
-              ],
-              model: 'gemini-pro-vision'
-            },
-            model: 'gemini-pro-vision'
+              ]
+            }
           })
         });
 
