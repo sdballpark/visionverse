@@ -73,21 +73,21 @@ function App() {
       const result = await geminiService.generateContent(base64Image);
       setPoem(result);
     } catch (err) {
-      console.error('Error in poem generation:', {
+      console.error('Gemini API Error:', {
         message: err.message,
         stack: err.stack,
         response: err.response?.data
       });
       
-      let errorMessage = 'Failed to generate poem';
+      let errorMessage = 'Gemini API Error';
       if (err.response?.status === 401) {
-        errorMessage = 'Invalid Gemini API key. Please check your environment variables.';
+        errorMessage = 'Invalid Gemini API key format. Please check your environment variables.';
       } else if (err.response?.status === 403) {
         errorMessage = 'Insufficient permissions. Please check your Gemini API key permissions.';
       } else if (err.response?.status === 429) {
         errorMessage = 'Rate limit exceeded. Please wait a moment and try again.';
       } else if (err.message) {
-        errorMessage = err.message;
+        errorMessage = `Gemini API Error: ${err.message}`;
       }
       
       setError(errorMessage);
