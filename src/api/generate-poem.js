@@ -5,6 +5,12 @@ import { GEMINI_API_KEY, GEMINI_API_URL, GEMINI_MODEL } from '../config/gemini';
 export async function POST(request) {
   try {
     console.log('Starting image processing...');
+    console.log('Gemini API Configuration:', {
+      apiKey: GEMINI_API_KEY.substring(0, 5) + '...' + GEMINI_API_KEY.substring(GEMINI_API_KEY.length - 5),
+      apiUrl: GEMINI_API_URL,
+      model: GEMINI_MODEL
+    });
+
     const formData = await request.formData();
     const file = formData.get('image');
 
