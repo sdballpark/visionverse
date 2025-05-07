@@ -37,12 +37,12 @@ const geminiService = {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${GEMINI_API_KEY}`,
-            'X-Goog-Api-Key': GEMINI_API_KEY,
             'Accept': 'application/json',
             'User-Agent': 'Visionverse/1.0',
             'X-Goog-Api-Key-Version': '1.0',
             'X-Goog-Request-Params': `key=${GEMINI_API_KEY}`,
-            'X-Goog-Api-Key-Location': 'header'
+            'X-Goog-Api-Key-Location': 'header',
+            'X-Request-ID': Math.random().toString(36).substring(2, 15)
           },
           body: JSON.stringify({
             contents: [
@@ -62,6 +62,14 @@ const geminiService = {
               safetySettings: [
                 {
                   category: 'HARM_CATEGORY_HARASSMENT',
+                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
+                },
+                {
+                  category: 'HARM_CATEGORY_HATE_SPEECH',
+                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
+                },
+                {
+                  category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
                   threshold: 'BLOCK_MEDIUM_AND_ABOVE'
                 }
               ]
