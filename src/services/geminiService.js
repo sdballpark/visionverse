@@ -47,7 +47,8 @@ const geminiService = {
             'X-Goog-Api-Key-Location': 'header',
             'X-Request-ID': Math.random().toString(36).substring(2, 15),
             'X-Goog-User-Project': 'visionverse-app',
-            'X-Goog-Api-Key-Format': 'v2'
+            'X-Goog-Api-Key-Format': 'v2',
+            'X-Goog-Api-Key-Source': 'visionverse-web'
           },
           body: JSON.stringify({
             contents: [
@@ -79,7 +80,8 @@ const geminiService = {
                 }
               ],
               model: 'gemini-pro-vision'
-            }
+            },
+            model: 'gemini-pro-vision'
           })
         });
 
