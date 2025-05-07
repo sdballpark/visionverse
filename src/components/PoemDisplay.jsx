@@ -106,6 +106,11 @@ export function PoemDisplay({ imageFile, poem, theme, onReset, onDownload, metad
                 onError={(e) => {
                   console.error('Failed to load image:', e);
                   setError('Failed to load image. Please try another image.');
+                  // Try to reload the image after a short delay
+                  setTimeout(() => {
+                    const img = e.target;
+                    img.src = imageFile;
+                  }, 1000);
                 }}
               />
             </div>

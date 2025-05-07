@@ -66,8 +66,8 @@ const validateApiUrl = (url) => {
   if (!url.includes('generativelanguage.googleapis.com')) {
     throw new Error('Invalid API URL format. Please use the correct Gemini API endpoint.');
   }
-  if (!url.includes('gemini-pro-vision')) {
-    throw new Error('Invalid model specification. Expected gemini-pro-vision model.');
+  if (!url.includes('v1')) {
+    throw new Error('Invalid API version. Expected v1 endpoint.');
   }
   if (!url.startsWith('https://')) {
     throw new Error('API URL must use HTTPS. Please verify your configuration.');
