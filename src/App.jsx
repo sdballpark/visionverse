@@ -81,7 +81,11 @@ function App() {
         if (err.message) {
           errorMessage = `Gemini API Error: ${err.message}`;
           if (err.message.includes('AIza')) {
-            errorMessage += '\nPlease verify your Gemini API key in Google Cloud Console.';
+            errorMessage += '\nPlease verify your Gemini API key in Vercel settings.';
+          } else if (err.message.includes('invalid_api_key')) {
+            errorMessage = 'Invalid Gemini API key format. Please verify your key starts with "AIza" in Vercel settings.';
+          } else if (err.message.includes('rate_limit')) {
+            errorMessage = 'Gemini API rate limit exceeded. Please wait a moment and try again.';
           }
         }
         setError(errorMessage);
