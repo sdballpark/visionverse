@@ -1,10 +1,14 @@
-import { OPENAI_API_KEY, OPENAI_API_URL, IMAGE_DESCRIPTION_MODEL, POEM_GENERATION_MODEL, POEM_PROMPT } from '../config/openai';
+import { GEMINI_API_KEY, GEMINI_API_URL, GEMINI_MODEL } from '../config/gemini';
 import { makeApiCallWithRetry } from '../utils/apiUtils';
 
 // Validate API key format
-function validateApiKey(apiKey) {
-  if (!apiKey || !apiKey.startsWith('sk-')) {
-    throw new Error('Invalid OpenAI API key format. Please check your .env file.');
+const validateApiKey = (apiKey) => {
+  if (!apiKey || apiKey.trim() === '') {
+    throw new Error('API key is required');
+  }
+  // Gemini API keys have a different format
+  if (!apiKey.startsWith('AIza')) {
+    throw new Error('Invalid API key format. Gemini API keys should start with "AIza"');
   }
 }
 
@@ -17,8 +21,8 @@ export async function generatePoem(imageFile) {
   }
   try {
     // Validate API key
-    validateApiKey(OPENAI_API_KEY);
-    console.log('OpenAI API Key:', OPENAI_API_KEY.substring(0, 5) + '...' + OPENAI_API_KEY.substring(OPENAI_API_KEY.length - 5));
+    validateApiKey(GEMINI_API_KEY);
+    console.log('Gemini API Key:', GEMINI_API_KEY.substring(0, 5) + '...' + GEMINI_API_KEY.substring(GEMINI_API_KEY.length - 5));
 
     console.log('Attempting to generate poem with image:', imageFile.name);
     
