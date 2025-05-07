@@ -4,11 +4,11 @@ import { makeApiCallWithRetry } from '../utils/apiUtils';
 // Validate API key format
 const validateApiKey = (apiKey) => {
   if (!apiKey || apiKey.trim() === '') {
-    throw new Error('API key is required');
+    throw new Error('Gemini API key is required');
   }
-  // Gemini API keys have a different format
+  // Gemini API keys should start with "AIza"
   if (!apiKey.startsWith('AIza')) {
-    throw new Error('Invalid API key format. Gemini API keys should start with "AIza"');
+    throw new Error('Invalid Gemini API key format. Please check your environment variables.');
   }
 }
 
