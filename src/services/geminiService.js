@@ -56,6 +56,7 @@ const geminiService = {
           method: 'POST',
           headers: headers,
           body: JSON.stringify({
+            project: 'projects/visionverse-app',
             model: 'gemini-pro-vision',
             contents: [
               {
@@ -107,10 +108,16 @@ const geminiService = {
                 {
                   category: 'HARM_CATEGORY_UNETHICAL',
                   threshold: 'BLOCK_MEDIUM_AND_ABOVE'
+                },
+                {
+                  category: 'HARM_CATEGORY_BULLYING',
+                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
+                },
+                {
+                  category: 'HARM_CATEGORY_DISCRIMINATION',
+                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
                 }
-              ],
-              model: 'gemini-pro-vision'
-            }
+              ]
             }
           })
         });
