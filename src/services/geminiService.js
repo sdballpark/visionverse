@@ -20,191 +20,94 @@ const geminiService = {
       
       console.log('Starting Gemini API request...');
       console.log('API Configuration:', {
-        url: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`,
+        apiUrl: `${GEMINI_API_URL}/projects/visionverse-app/locations/global/models/${GEMINI_MODEL}:generateContent`,
         apiKeyLength: GEMINI_API_KEY.length,
         startsWithAIza: GEMINI_API_KEY.startsWith('AIza'),
-        model: GEMINI_MODEL
+        model: GEMINI_MODEL,
+        headers: Object.keys(headers)
       });
-      console.log('Starting Gemini API request...');
 
-      // Construct the full API URL with project ID
-      const apiUrl = `${GEMINI_API_URL}/projects/visionverse-app/locations/global/models/${GEMINI_MODEL}:generateContent`;
-      console.log('Making API request to:', apiUrl);
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${GEMINI_API_KEY}`,
+        'Accept': 'application/json',
+        'User-Agent': 'Visionverse/1.0',
+        'X-Goog-Api-Key-Version': '1.0',
+        'X-Goog-Api-Key-Location': 'header',
+        'X-Goog-User-Project': 'projects/visionverse-app',
+        'X-Goog-Api-Key-Format': 'v2',
+        'X-Goog-Api-Key-Source': 'visionverse-web',
+        'X-Goog-Api-Key-Region': 'global',
+        'X-Goog-Api-Key-Type': 'service_account',
+        'X-Goog-Api-Key-Usage': 'image-generation'
+      };
 
-      try {
-        console.log('Sending request to:', apiUrl);
-        
-        const headers = {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${GEMINI_API_KEY}`,
-          'Accept': 'application/json',
-          'User-Agent': 'Visionverse/1.0',
-          'X-Goog-Api-Key-Version': '1.0',
-          'X-Goog-Api-Key-Location': 'header',
-          'X-Request-ID': Math.random().toString(36).substring(2, 15),
-          'X-Goog-User-Project': 'projects/visionverse-app',
-          'X-Goog-Api-Key-Format': 'v2',
-          'X-Goog-Api-Key-Source': 'visionverse-web',
-          'X-Goog-Api-Key-Region': 'global',
-          'X-Goog-Api-Key-Type': 'service_account',
-          'X-Goog-Api-Key-Usage': 'image-generation'
-        };
-        console.log('Request headers:', Object.keys(headers));
-        
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: headers,
-          body: JSON.stringify({
-            contents: [
-              {
-                inlineData: {
-                  mimeType: 'image/jpeg',
-                  data: imageData
-                }
+      const startTime = Date.now();
+      const response = await fetch(`${GEMINI_API_URL}/projects/visionverse-app/locations/global/models/${GEMINI_MODEL}:generateContent`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+          contents: [
+            {
+              inlineData: {
+                mimeType: 'image/jpeg',
+                data: imageData
               }
-            ],
-            generationConfig: {
-              temperature: 0.7,
-              topP: 0.8,
-              topK: 40,
-              maxOutputTokens: 2048,
-              candidateCount: 1,
-              safetySettings: [
-                {
-                  category: 'HARM_CATEGORY_HARASSMENT',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                },
-                {
-                  category: 'HARM_CATEGORY_HATE_SPEECH',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                },
-                {
-                  category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                },
-                {
-                  category: 'HARM_CATEGORY_DANGEROUS',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                },
-                {
-                  category: 'HARM_CATEGORY_HARSH',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                },
-                {
-                  category: 'HARM_CATEGORY_SELF_HARM',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                },
-                {
-                  category: 'HARM_CATEGORY_VIOLENCE',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                },
-                {
-                  category: 'HARM_CATEGORY_UNSAFE',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                },
-                {
-                  category: 'HARM_CATEGORY_UNETHICAL',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                },
-                {
-                  category: 'HARM_CATEGORY_BULLYING',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                },
-                {
-                  category: 'HARM_CATEGORY_DISCRIMINATION',
-                  threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                }
-              ]
             }
-          })
-        });
-
-        if (!response.ok) {
-          try {
-            const error = await response.json();
-            console.error('Gemini API Error Details:', {
-              status: response.status,
-              statusText: response.statusText,
-              error: error,
-              headers: Object.fromEntries(response.headers.entries()),
-              requestUrl: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`,
-              responseTime: Date.now() - startTime,
-              requestHeaders: headers,
-              requestBody: {
-                model: 'gemini-pro-vision',
-                contents: [{
-                  inlineData: {
-                    mimeType: 'image/jpeg',
-                    data: 'REDACTED_IMAGE_DATA'
-                  }
-                }],
-                generationConfig: {
-                  temperature: 0.7,
-                  topP: 0.8,
-                  topK: 40,
-                  maxOutputTokens: 2048,
-                  candidateCount: 1,
-                  safetySettings: [
-                    { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-                    { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-                    { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-                    { category: 'HARM_CATEGORY_DANGEROUS', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-                    { category: 'HARM_CATEGORY_HARSH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-                    { category: 'HARM_CATEGORY_SELF_HARM', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-                    { category: 'HARM_CATEGORY_VIOLENCE', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-                    { category: 'HARM_CATEGORY_UNSAFE', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-                    { category: 'HARM_CATEGORY_UNETHICAL', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
-                  ]
-                }
-              }
-            });
-          } catch (parseError) {
-            console.error('Failed to parse error response:', {
-              status: response.status,
-              statusText: response.statusText,
-              headers: Object.fromEntries(response.headers.entries()),
-              requestUrl: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`,
-              responseTime: Date.now() - startTime
-            });
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            topP: 0.8,
+            topK: 40,
+            maxOutputTokens: 2048,
+            candidateCount: 1,
+            safetySettings: [
+              { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+              { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+              { category: 'HARM_CATEGORY_DANGEROUS', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+              { category: 'HARM_CATEGORY_HARSH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+              { category: 'HARM_CATEGORY_SELF_HARM', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+              { category: 'HARM_CATEGORY_VIOLENCE', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
+            ]
           }
+        })
+      });
 
-          const errorMessage = `Gemini API Error (${response.status}): ${error.message || response.statusText}`;
-          console.error(errorMessage);
-          throw new Error(errorMessage);
-        }
-      } catch (error) {
-        console.error('Gemini API Request Error:', {
-          message: error.message,
-          stack: error.stack,
-          name: error.name
+      const responseTime = Date.now() - startTime;
+      console.log('API Response Time:', responseTime + 'ms');
+      
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('API Error Response:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: error
         });
-
-        if (error.response) {
-          console.error('API Response Details:', {
-            status: error.response.status,
-            statusText: error.response.statusText,
-            data: error.response.data
-          });
-        }
-
-        throw error;
+        throw new Error(`Gemini API error: ${error.message || 'Unknown error'}`);
       }
 
       const data = await response.json();
-      console.log('Gemini API Response:', {
-        status: response.status,
-        candidates: data.candidates?.length,
-        response: data,
-        requestUrl: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`
+      console.log('API Response:', {
+        candidates: data.candidates?.length || 0,
+        responseCode: response.status,
+        responseTime: responseTime + 'ms'
       });
 
-      if (!data.candidates || data.candidates.length === 0) {
-        throw new Error('No content generated by Gemini API');
+      // Extract the generated text from the response
+      const text = data.candidates?.[0]?.content?.text;
+      if (!text) {
+        throw new Error('No text generated by Gemini API');
       }
 
-      return data.candidates[0].content.parts[0].text.trim();
+      return text;
+
     } catch (error) {
-      console.error('Error in generateContent:', error);
+      console.error('Error in generateContent:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack
+      });
       throw error;
     }
   }
