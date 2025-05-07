@@ -32,6 +32,9 @@ const geminiService = {
       console.log('Making API request to:', apiUrl);
 
       try {
+        console.log('Sending request to:', apiUrl);
+        console.log('Request headers:', Object.keys(headers));
+        
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
@@ -43,7 +46,8 @@ const geminiService = {
             'X-Goog-Request-Params': `key=${GEMINI_API_KEY}`,
             'X-Goog-Api-Key-Location': 'header',
             'X-Request-ID': Math.random().toString(36).substring(2, 15),
-            'X-Goog-User-Project': 'visionverse-app'
+            'X-Goog-User-Project': 'visionverse-app',
+            'X-Goog-Api-Key-Format': 'v2'
           },
           body: JSON.stringify({
             contents: [
@@ -80,14 +84,25 @@ const geminiService = {
         });
 
         if (!response.ok) {
-          const error = await response.json();
-          console.error('Gemini API Error Details:', {
-            status: response.status,
-            statusText: response.statusText,
-            error: error,
-            headers: Object.fromEntries(response.headers.entries()),
-            requestUrl: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`
-          });
+          try {
+            const error = await response.json();
+            console.error('Gemini API Error Details:', {
+              status: response.status,
+              statusText: response.statusText,
+              error: error,
+              headers: Object.fromEntries(response.headers.entries()),
+              requestUrl: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`,
+              responseTime: Date.now() - startTime
+            });
+          } catch (parseError) {
+            console.error('Failed to parse error response:', {
+              status: response.status,
+              statusText: response.statusText,
+              headers: Object.fromEntries(response.headers.entries()),
+              requestUrl: `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`,
+              responseTime: Date.now() - startTime
+            });
+          }
 
           const errorMessage = `Gemini API Error (${response.status}): ${error.message || response.statusText}`;
           console.error(errorMessage);
