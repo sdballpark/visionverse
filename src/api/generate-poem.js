@@ -49,7 +49,7 @@ export async function POST(request) {
     // Generate content using Gemini
     try {
       const response = await axios.post(
-        `${GEMINI_API_URL}/generateContent`,
+        `${GEMINI_API_URL}:generateContent`,
         {
           contents: [
             {
