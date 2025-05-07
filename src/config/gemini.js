@@ -46,15 +46,16 @@ const validateGeminiApiKey = (apiKey) => {
   }
 };
 
-export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 
 // Validate API key immediately
-if (!GEMINI_API_KEY) {
+if (!apiKey) {
   console.error('Gemini API key is missing. Please set VITE_GEMINI_API_KEY in your environment variables.');
   throw new Error('Gemini API key is required');
 }
 
-validateGeminiApiKey(GEMINI_API_KEY);
+validateGeminiApiKey(apiKey);
+export const GEMINI_API_KEY = apiKey;
 export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1';
 export const GEMINI_MODEL = 'gemini-pro-vision';
 
