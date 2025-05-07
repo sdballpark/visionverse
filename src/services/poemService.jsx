@@ -143,6 +143,6 @@ In every word, a work of heart.`;
     console.error('Error in poem generation:', error);
     console.error('Detailed error:', error);
     console.error('Error stack:', error.stack);
-    throw new Error(`Failed to generate poem: ${error.message}`);
+    throw new Error(`Gemini API Error: Failed to generate poem. ${error.message}`);
   }
 }

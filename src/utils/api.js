@@ -36,14 +36,8 @@ Capturing moments in a single space.`,
       }
     };
   } catch (error) {
-    console.error('Detailed error:', error);
+    console.error(`Gemini API Error: Failed to generate poem. Detailed error: ${error.message}`);
     console.error('Error stack:', error.stack);
-    throw new Error(`Failed to generate poem: ${error.message}`);
-  }
-}
-  } catch (error) {
-    console.error('Detailed error:', error);
-    console.error('Error stack:', error.stack);
-    throw new Error(`Failed to generate poem: ${error.message}`);
+    throw new Error(`Gemini API Error: Failed to generate poem. ${error.message}`);
   }
 }

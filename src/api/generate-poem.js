@@ -55,7 +55,7 @@ export async function POST(request) {
     // Generate content using Gemini
     try {
       const response = await axios.post(
-        `${GEMINI_API_URL}/models/${GEMINI_MODEL}:generateContent`,
+        `${GEMINI_API_URL}/models/gemini-pro-vision:generateContent`,
         {
           contents: [
             {
@@ -134,7 +134,7 @@ export async function POST(request) {
       );
     } else {
       return NextResponse.json(
-        { error: error.message || 'Failed to generate poem' },
+        { error: `Gemini API Error: ${error.message || 'Failed to generate poem'}` },
         { status: error.response?.status || 500 }
       );
     }
