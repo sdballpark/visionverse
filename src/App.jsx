@@ -81,16 +81,17 @@ function App() {
       
       let errorMessage = 'Gemini API Error';
       if (err.response?.status === 401) {
-        errorMessage = 'Invalid Gemini API key format. Please check your environment variables.';
+        errorMessage = 'Invalid Gemini API key format. Please verify your VITE_GEMINI_API_KEY in Vercel settings.';
       } else if (err.response?.status === 403) {
-        errorMessage = 'Insufficient permissions. Please check your Gemini API key permissions.';
+        errorMessage = 'Insufficient permissions. Please check your Gemini API key permissions in Google Cloud Console.';
       } else if (err.response?.status === 429) {
         errorMessage = 'Gemini API rate limit exceeded. Please wait a moment and try again.';
       } else if (err.message) {
         errorMessage = `Gemini API Error: ${err.message}`;
       } else {
-        setError('Failed to generate poem using Gemini API. Please try again.');
+        errorMessage = 'Failed to generate poem using Gemini API. Please check your Vercel environment variables and try again.';
       }
+      setError(errorMessage);
       
       setError(errorMessage);
     } finally {
